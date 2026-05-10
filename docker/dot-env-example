@@ -1,0 +1,25 @@
+# --- Llama Server Default Parameters ---
+# Host settings
+default_host=0.0.0.0
+default_port=8080
+
+# Default model path
+default_model=/models/mistralai_Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M.gguf
+
+# Cache types
+default_cache_type_k=f16
+default_cache_type_v=f16
+
+# CPU / GPU settings
+default_n_cpu_moe=0
+default_ngl=36
+
+# Flags
+default_no_mmap=false
+default_mlock=false
+default_jinja=false
+default_context=4096
+
+# --- API Configuration ---
+# Optional API Keys (comma separated). Empty string disables authentication.
+api_keys=
