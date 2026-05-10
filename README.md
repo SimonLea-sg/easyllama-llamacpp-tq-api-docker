@@ -31,7 +31,7 @@ Using http calls you can set llama.cpp startup options and restart llama-server 
 * Edit ./docker/.env and set any enivronment variables on startup.
 * Set your API key(s) to enable API authentication.
 
-#### Build the image (from scratch, remove  --no-cache for updating the build)
+### Build the image (from scratch, remove  --no-cache for updating the build)
 docker build  --no-cache -t easy-llama -f ./docker/Dockerfile .
 
 ### Creating and Running a Container
@@ -77,15 +77,15 @@ curl -X POST http://localhost:8000/restartllama \
 
 #### Put these in the -d '{}' section of the api call to set them and restart llama-server process.
 
-"m": "/models/[model name]"
-"ngl": 36
-"nn-cpu-moegl": 0
-"cache-type-k": turbo3
-"cache-type-v": turbo4
-"no-mmap": [true/false]
-"mlock": [true/false]
-"jinja": [true/false]
-"context": 4096
+* "m": "/models/[model name]"
+* "ngl": 36
+* "nn-cpu-moegl": 0
+* "cache-type-k": turbo3
+* "cache-type-v": turbo4
+* "no-mmap": [true/false]
+* "mlock": [true/false]
+* "jinja": [true/false]
+* "context": 4096
 
 ### Perminently change the llama-server startup parameters.
 
