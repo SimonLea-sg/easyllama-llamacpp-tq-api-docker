@@ -37,10 +37,11 @@ docker build  --no-cache -t easy-llama -f ./docker/Dockerfile .
 ### Creating and Running a Container
 
 #### Start a container based on the image
-* [Ext port] = Port number to connect to the container on
+* [Ext port] = Port number to connect to the api on
+* [Ext port llama] = Port number to connect to llama-server on
 * [Ext volume] = Docker volume name or physical volume path
 
-docker run -d --name easy-llama --gpus all -p [Ext port]:8000 -v [Ext volume]:/models easy-llama
+docker run -d --name easy-llama --gpus all -p [Ext port]:8000 -p [Ext port llama]:8080 -v [Ext volume]:/models easy-llama
 
 #### Stopping the container
 docker stop easy-llama
@@ -90,7 +91,7 @@ curl -X POST http://localhost:8000/restartllama \
 ### Perminently change the llama-server startup parameters.
 
 #### Start the container and link ./docker/.env into the container after setting the values.
-docker run -d --name easy-llama --gpus all -p [Ext port]:8000 -v [Ext volume]:/models -v ./docker/.env:/app/.env:ro easy-llama
+docker run -d --name easy-llama --gpus all -p [Ext port]:8000 -v [Ext volume]:/models -p [Ext port llama]:8080 -v ./docker/.env:/app/.env:ro easy-llama
 
 #### Edit in the API code (correct option).
 Ammend ./api/config.py
