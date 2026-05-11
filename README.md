@@ -86,7 +86,7 @@ curl -X POST http://localhost:8000/restartllama \
 * "no-mmap": [true/false]
 * "mlock": [true/false]
 * "jinja": [true/false]
-* "context": 4096
+* "ctx_size": 4096
 
 ### Perminently change the llama-server startup parameters.
 

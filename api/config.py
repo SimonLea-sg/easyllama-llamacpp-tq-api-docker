@@ -22,7 +22,7 @@ class LlamaArgs(BaseModel):
     no_mmap: bool = False
     mlock: bool = False
     jinja: bool = False
-    context: int = 2048
+    ctx_size: int = 2048
 
     def to_command_list(self) -> List[str]:
         """Converts the Pydantic model into a list of command line arguments."""
@@ -40,7 +40,7 @@ class LlamaArgs(BaseModel):
         if self.host:
             cmd.extend(["--host", self.host])
         if self.port > 0:
-            cmd.extend(["--host", str(self.host)])
+            cmd.extend(["--port", str(self.port)])
         
         if self.cache_type_k:
             cmd.extend(["--cache-type-k", self.cache_type_k])
@@ -53,11 +53,11 @@ class LlamaArgs(BaseModel):
         if self.ngl > 0:
             cmd.extend(["-ngl", str(self.ngl)])
             
-        if self.context > 0:
-            cmd.extend(["--context", str(self.context)])
+        if self.ctx_size > 0:
+            cmd.extend(["--ctx-size", str(self.ctx_size)])
             
         # Model path (-m)
-        if self.m and self.m != "/models/mistralai_Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M.gguf":
+        if self.m:
             cmd.extend(["-m", self.m])
             
         return cmd
@@ -71,11 +71,11 @@ class AppSettings(BaseSettings):
     default_cache_type_k: str = "f16"
     default_cache_type_v: str = "f16"
     default_n_cpu_moe: int = 0
-    default_ngl: int = 32
+    default_ngl: int = 36
     default_no_mmap: bool = False
     default_mlock: bool = False
     default_jinja: bool = False
-    default_context: int = 2048
+    default_ctx_size: int = 4096
     
     # Socket path (assuming default for standard build)
     socket_path: str = "/tmp/llama-server.sock"

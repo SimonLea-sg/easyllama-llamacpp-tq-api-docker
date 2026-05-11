@@ -1,7 +1,7 @@
 import subprocess
-import time
 import os
 import logging
+import psutil
 from typing import Optional
 from config import AppSettings, LlamaArgs
 
@@ -17,26 +17,22 @@ class LlamaProcessManager:
         """Starts the llama-server subprocess with the given arguments."""
         if self.process and self.process.poll() is None:
             logger.warning("Server already running. Please restart first.")
+            print("Server already running. Please restart first.")
             return False
-
-        # Cleanup stale socket file before starting
-        if os.path.exists(self.socket_path):
-            try:
-                os.remove(self.socket_path)
-                logger.info(f"Removed stale socket: {self.socket_path}")
-            except OSError as e:
-                logger.warning(f"Could not remove socket: {e}")
-
-        command = ["llama-server"] + args.to_command_list()
         
+        print("Start Server args received: ", args)
+
+        command = ["/usr/local/bin/llama-server"] + args.to_command_list()
+
         logger.info(f"Starting server with: {' '.join(command)}")
-        
+        print("Starting server with: ", command)
+
         try:
             # Create new process
             self.process = subprocess.Popen(
                 command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                # stdout=subprocess.PIPE,
+                # stderr=subprocess.PIPE,
                 text=True
             )
             logger.info("Server process started.")
@@ -51,6 +47,7 @@ class LlamaProcessManager:
     def stop_server(self):
         """Stops the subprocess gracefully."""
         if not self.process:
+            logger.info("Server does not need stopping.")
             return
 
         logger.info("Stopping server...")
@@ -77,14 +74,19 @@ class LlamaProcessManager:
 
     def check_health(self) -> dict:
         """
-        Checks if the server is running and listening on the socket.
+        Checks if the server is running by searching the process list.
         Returns status info.
         """
+        # Check system-wide process list for 'llama-server'
+        try:
+            for proc in psutil.process_iter(['name']):
+                if proc.info['name'] == 'llama-server':
+                    return {"status": "running", "message": "Llama server is running."}
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass
+
+        # If no process found, check if the managed process is just starting
         if self.process and self.process.poll() is None:
-            # Process is alive
-            if os.path.exists(self.socket_path):
-                return {"status": "running", "message": "Llama server is healthy and listening."}
-            else:
-                return {"status": "starting", "message": "Process is alive, waiting for socket file..."}
-        else:
-            return {"status": "stopped", "message": "Server is stopped."}
+            return {"status": "starting", "message": "Process is starting..."}
+        
+        return {"status": "stopped", "message": "Server is stopped."}
