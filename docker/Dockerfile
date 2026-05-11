@@ -42,6 +42,7 @@ RUN cmake -B build \
     -DGGML_NATIVE=OFF \
     -DGGML_BACKEND_DL=ON \
     -DGGML_CPU_ALL_VARIANTS=ON \
+    -DLLAMA_OPENSSL=ON \
     -DLLAMA_BUILD_TESTS=OFF \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined .&& \
